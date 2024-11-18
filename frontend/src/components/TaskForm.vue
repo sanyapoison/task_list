@@ -9,6 +9,7 @@
 
 <script>
 import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 export default {
   name: "TaskForm",
@@ -33,9 +34,9 @@ export default {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (this.editMode) {
-        await axios.put(`http://localhost:5000/tasks/${this.task.id}`, this.task, { headers });
+        await axios.put(`${API_BASE_URL}/tasks/${this.task.id}`, this.task, { headers });
       } else {
-        await axios.post("http://localhost:5000/tasks", this.task, { headers });
+        await axios.post(`${API_BASE_URL}/tasks`, this.task, { headers });
       }
 
       this.$emit("taskSubmitted");

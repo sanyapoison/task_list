@@ -8,7 +8,7 @@ export default createStore({
     mutations: {
         setAuth(state, { isAuthenticated, userEmail }) {
             state.isAuthenticated = isAuthenticated;
-            state.userEmail = userEmail;
+            state.userEmail = userEmail || "";
         },
         logout(state) {
             state.isAuthenticated = false;

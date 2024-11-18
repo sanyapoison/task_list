@@ -1,6 +1,9 @@
 <template>
   <v-container max-width="30%">
     <v-card class="pa-3">
+      <v-card-title class="text-h5">Login</v-card-title>
+      <v-divider></v-divider>
+
       <v-form @submit.prevent="loginHand">
         <v-text-field v-model="email" label="Email" required></v-text-field>
         <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
@@ -17,7 +20,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
-
+import { API_BASE_URL } from '@/config';
 export default {
   name: "UserLogin",
   data() {
@@ -32,7 +35,7 @@ export default {
     ...mapActions(["login"]), // Используем login из Vuex
     async loginHand() {
       try {
-        const response = await axios.post("http://localhost:5000/login", {
+        const response = await axios.post(`${API_BASE_URL}/login`, {
           email: this.email,
           password: this.password,
         });

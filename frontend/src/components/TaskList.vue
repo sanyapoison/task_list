@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="space-between" align="center">
-      <v-btn color="primary" @click="openTaskModal">Add Task</v-btn>
+      <v-btn color="primary" @click="openTaskModal()">Add Task</v-btn>
       <!-- Ваша кнопка добавлена слева -->
     </v-row>
 
@@ -47,6 +47,7 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
+import { API_BASE_URL } from '@/config';
 
 export default {
   data() {
@@ -66,7 +67,7 @@ export default {
     async fetchTasks() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/tasks", {
+        const response = await axios.get(`${API_BASE_URL}/tasks`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.tasks = response.data;
@@ -78,7 +79,7 @@ export default {
     async addTask() {
       try {
         const token = localStorage.getItem("token");
-        await axios.post("http://localhost:5000/tasks", this.taskForm, {
+        await axios.post(`${API_BASE_URL}/tasks`, this.taskForm, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.closeTaskModal();
@@ -89,8 +90,17 @@ export default {
       }
     },
     openTaskModal(task = null) {
-      this.isEditMode = !!task;
-      this.taskForm = task ? { ...task } : { title: "", description: "", status: false };
+      console.log(task);
+
+      if (task) {
+        // Режим редактирования
+        this.isEditMode = true;
+        this.taskForm = { ...task };
+      } else {
+        // Режим создания
+        this.isEditMode = false;
+        this.taskForm = { title: '', description: '', status: false };
+      }
       this.isTaskModalOpen = true;
     },
     closeTaskModal() {
@@ -99,7 +109,7 @@ export default {
     async updateTask() {
       try {
         const token = localStorage.getItem("token");
-        await axios.put(`http://localhost:5000/tasks/${this.taskForm.id}`, this.taskForm, {
+        await axios.put(`${API_BASE_URL}/tasks/${this.taskForm.id}`, this.taskForm, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.closeTaskModal();
@@ -118,7 +128,7 @@ export default {
 
       try {
         const token = localStorage.getItem("token");
-        await axios.delete(`http://localhost:5000/tasks/${taskId}`, {
+        await axios.delete(`${API_BASE_URL}/tasks/${taskId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.fetchTasks();
